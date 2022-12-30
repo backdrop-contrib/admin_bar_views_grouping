@@ -1,0 +1,59 @@
+<?php
+/**
+* @file
+* Group Views in the admin bar according to their tags.
+*
+*/
+
+/**
+ * Implements hook_admin_bar_output_alter().
+ */
+function admin_bar_views_grouping_admin_bar_output_alter(&$content) {
+  $views_menu = &$content['menu']['menu']['admin/structure']['admin/structure/views'];
+
+   $views = views_get_all_views();
+
+  $view_tags = array();
+  foreach ($views as $name => &$view) {
+    if (!empty($view->tag)) {
+      $tags = explode(',', $view->tag);
+      $view_tags[$name] = array_map('trim', $tags);
+    }
+    else {
+      $view_tags[$name] = array();
+    }
+  }
+
+  $prefix = 'admin/structure/views/view/';
+  $prefix_len = strlen($prefix);
+  foreach ($views_menu as $path => $item) {
+    if (substr($path, 0, $prefix_len) == $prefix) {
+      $name = substr($path, $prefix_len);
+      if (!empty($view_tags[$name])) {
+        // Add the view to a tagged sublevel and then remove it from the top
+        // level of $views_menu.
+        foreach ($view_tags[$name] as $tag) {
+          // $tag_path is just used as a unique array key; it's not a real path.
+          $tag_path = 'admin/structure/views/tagged-views/' . urlencode($tag);
+          if (!isset($views_menu[$tag_path])) {
+            $views_menu[$tag_path]['#title'] = check_plain($tag);
+            // If this module were in core, we could implement a path that
+            // displays all views with a given tag, but for now, just go to the
+            // main views display page.
+            $views_menu[$tag_path]['#href'] = 'admin/structure/views';
+            $views_menu[$tag_path]['#options'] = array('attributes' => array(), 'alias' => TRUE);
+            // Tagged lists go below the untagged and admin elements.
+            $views_menu[$tag_path]['#weight'] = 1;
+          }
+          $views_menu[$tag_path][$path] = $views_menu[$path];
+        }
+        unset($views_menu[$path]);
+      }
+      else {
+      }
+    }
+  }
+  // And we'd like the Views settings to be at the bottom since it's rarely
+  // used.
+  $views_menu['admin/structure/views/settings']['#weight'] = 2;
+}

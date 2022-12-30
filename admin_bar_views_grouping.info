@@ -1,0 +1,7 @@
+name = Admininstration Bar Views Grouping
+description = Group Views in the admin bar according to their tags.
+type = module
+package = Administration
+backdrop = 1.x
+
+dependencies[] = admin_bar
