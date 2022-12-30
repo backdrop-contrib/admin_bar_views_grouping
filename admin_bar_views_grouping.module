@@ -11,10 +11,10 @@
 function admin_bar_views_grouping_admin_bar_output_alter(&$content) {
   $views_menu = &$content['menu']['menu']['admin/structure']['admin/structure/views'];
 
-   $views = views_get_all_views();
+  $views = views_get_all_views();
 
   $view_tags = array();
-  foreach ($views as $name => &$view) {
+  foreach ($views as $name => $view) {
     if (!empty($view->tag)) {
       $tags = explode(',', $view->tag);
       $view_tags[$name] = array_map('trim', $tags);
