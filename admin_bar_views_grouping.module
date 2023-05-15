@@ -11,6 +11,12 @@
 function admin_bar_views_grouping_admin_bar_output_alter(&$content) {
   $views_menu = &$content['menu']['menu']['admin/structure']['admin/structure/views'];
 
+  // End if there are no views menu items. For example if the user does not
+  // have permission to administer views.
+  if (empty($views_menu)) {
+    return;
+  }
+
   $views = views_get_all_views();
 
   $view_tags = array();
