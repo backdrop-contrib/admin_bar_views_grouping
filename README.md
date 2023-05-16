@@ -5,6 +5,8 @@ The Administration Bar Views Grouping module modifies the admin bar menus to add
 
 You can create and/or modify tags on individual Views (and thereby affect which submenu(s) they appear under) by selecting the "Change view name/description" option on the View's configuration page.
 
+Views with no tags will continue to appear in the Admin > Structure > Views menu.
+
 Installation
 ------------
 
